@@ -4,12 +4,10 @@ public class Empaquetador implements Runnable {
 
 	private Mostrador mostrador;
 	private Caja caja;
-	private Brazo brazo;
 
-	public Empaquetador(Mostrador mostrador, Caja caja, Brazo brazo) {
+	public Empaquetador(Mostrador mostrador, Caja caja) {
 		this.mostrador = mostrador;
 		this.caja = caja;
-		this.brazo = brazo;
 	}
 
 	public void moverPasta() throws InterruptedException {
@@ -23,7 +21,7 @@ public class Empaquetador implements Runnable {
 			Pasta pasta = mostrador.cojerPasta();
 			while (caja.calcIsFull(pasta.getPeso())) {
 				System.out.println("Empaquetador: Caja is full");
-				brazo.vaciarCaja();
+				mostrador.wait();
 			}
 			caja.addPasta(pasta);
 			mostrador.notifyAll();

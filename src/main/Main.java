@@ -7,14 +7,16 @@ public class Main {
 		Mostrador mostrador = new Mostrador();
 
 		Caja caja = new Caja(30);
-		Brazo brazo = new Brazo(caja);
 
-		Thread tHorno = new Thread(new Horno(mostrador));
+		Thread tBrazo = new Thread(new Brazo(mostrador, caja));
 
-		Thread tEmpaquetador = new Thread(new Empaquetador(mostrador, caja, brazo));
+		Thread tHorno = new Thread(new Horno(mostrador, caja));
+
+		Thread tEmpaquetador = new Thread(new Empaquetador(mostrador, caja));
 
 		tHorno.start();
 		tEmpaquetador.start();
+		tBrazo.start();
 	}
 
 }
