@@ -12,17 +12,16 @@ public class Brazo implements Runnable {
 
 	public void vaciarCaja() throws InterruptedException {
 		synchronized (caja) {
-			caja.notifyAll();
 			while (caja.getIsFull()) {
 				System.out.println("Brazo está cambiando la caja...");
 				Thread.sleep(1000);
 				caja.vaciar();
-
-				synchronized (mostrador) {
-					mostrador.notify();
-				}
 			}
 
+		}
+
+		synchronized (mostrador) {
+			mostrador.notifyAll();
 		}
 	}
 

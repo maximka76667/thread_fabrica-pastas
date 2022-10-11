@@ -59,6 +59,7 @@ public class Caja {
 
 	public void vaciar() {
 		pastas = new ArrayList<Pasta>();
+		setIsFull(false);
 	}
 
 }
