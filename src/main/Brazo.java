@@ -3,25 +3,21 @@ package main;
 public class Brazo implements Runnable {
 
 	private Caja caja;
-	private Mostrador mostrador;
 
 	public Brazo(Mostrador mostrador, Caja caja) {
 		this.caja = caja;
-		this.mostrador = mostrador;
 	}
 
 	public void vaciarCaja() throws InterruptedException {
 		synchronized (caja) {
 			while (caja.getIsFull()) {
 				System.out.println("Brazo está cambiando la caja...");
-				Thread.sleep(1000);
+				Thread.sleep(3000);
+				System.out.println("Brazo ha cambiado la caja");
 				caja.vaciar();
+				caja.notifyAll();
 			}
 
-		}
-
-		synchronized (mostrador) {
-			mostrador.notifyAll();
 		}
 	}
 
