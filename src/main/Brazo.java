@@ -8,24 +8,11 @@ public class Brazo implements Runnable {
 		this.caja = caja;
 	}
 
-	public void vaciarCaja() throws InterruptedException {
-		synchronized (caja) {
-			while (caja.getIsFull()) {
-				System.out.println("Brazo está cambiando la caja...");
-				Thread.sleep(3000);
-				System.out.println("Brazo ha cambiado la caja");
-				caja.vaciar();
-				caja.notifyAll();
-			}
-
-		}
-	}
-
 	@Override
 	public void run() {
 		while (true) {
 			try {
-				vaciarCaja();
+				caja.vaciar();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

@@ -2,27 +2,25 @@ package main;
 
 public class Horno implements Runnable {
 
-	int[] pesos = { 3, 7, 10 };
 	private Mostrador mostrador;
+	protected int tipo;
 
-	public Horno(Mostrador mostrador, Caja caja) {
+	public Horno(Mostrador mostrador, Caja caja, int tipo) {
 		this.mostrador = mostrador;
+		this.tipo = tipo;
 	}
 
-	public void producirPasta() throws InterruptedException {
-		Thread.sleep(900);
-		synchronized (mostrador) {
-			int pesoAleatorio = (int) Math.floor(Math.random() * pesos.length);
-			Pasta nuevaPasta = new Pasta(pesos[pesoAleatorio]);
-			mostrador.addPasta(nuevaPasta);
-		}
+	public Pasta producirPasta() throws InterruptedException {
+		Pasta nuevaPasta = new Pasta(tipo);
+		Thread.sleep(1000);
+		return nuevaPasta;
 	}
 
 	@Override
 	public void run() {
 		while (true) {
 			try {
-				producirPasta();
+				mostrador.addPasta(producirPasta());
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

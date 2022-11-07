@@ -11,24 +11,8 @@ public class Empaquetador implements Runnable {
 	}
 
 	public void moverPasta() throws InterruptedException {
-		Pasta pasta;
-		Thread.sleep(1000);
-		synchronized (mostrador) {
-			while (mostrador.getPastasLength() == 0) {
-				System.out.println("Empaquetador: Mostrador is empty");
-				caja.wait();
-			}
-			pasta = mostrador.cojerPasta();
-		}
-
-		synchronized (caja) {
-			while (caja.calcIsFull(pasta.getPeso())) {
-				System.out.println("Empaquetador: Caja is full");
-				caja.wait();
-			}
-			caja.addPasta(pasta);
-			caja.notifyAll();
-		}
+		Pasta pasta = mostrador.cojerPasta();
+		caja.addPasta(pasta);
 	}
 
 	@Override

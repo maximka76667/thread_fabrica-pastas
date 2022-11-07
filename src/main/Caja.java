@@ -8,17 +8,6 @@ public class Caja {
 	private int pesoMaximo;
 	private boolean isFull;
 
-	public Caja(int pesoMaximo) {
-		pastas = new ArrayList<Pasta>();
-		this.pesoMaximo = pesoMaximo;
-	}
-
-	public Pasta addPasta(Pasta pasta) {
-		pastas.add(pasta);
-		show();
-		return pasta;
-	}
-
 	public int getPastasLength() {
 		return this.pastas.size();
 	}
@@ -33,12 +22,6 @@ public class Caja {
 			pesos += pasta.getPeso();
 		}
 		return pesos;
-	}
-
-	public boolean calcIsFull(int nuevoPeso) {
-		boolean newState = getPesos() + nuevoPeso > pesoMaximo;
-		setIsFull(newState);
-		return newState;
 	}
 
 	public boolean getIsFull() {
@@ -57,9 +40,47 @@ public class Caja {
 		System.out.println();
 	}
 
-	public void vaciar() {
+	public Caja(int pesoMaximo) {
 		pastas = new ArrayList<Pasta>();
-		setIsFull(false);
+		this.pesoMaximo = pesoMaximo;
+	}
+
+	public Pasta addPasta(Pasta pasta) throws InterruptedException {
+		synchronized (this) {
+			while (calcIsFull(pasta.getPeso())) {
+				System.out.println("Caja está llena");
+				wait();
+			}
+			Thread.sleep(1000);
+			pastas.add(pasta);
+			notifyAll();
+			show();
+			return pasta;
+		}
+	}
+
+	public boolean calcIsFull(int nuevoPeso) {
+		boolean newState = getPesos() + nuevoPeso > pesoMaximo;
+		synchronized (this) {
+			setIsFull(newState);
+			notifyAll();
+		}
+		return newState;
+	}
+
+	public void vaciar() throws InterruptedException {
+		synchronized (this) {
+			while (!getIsFull()) {
+				wait();
+			}
+			System.out.println("Brazo está cambiando la caja...");
+			Thread.sleep(3000);
+			System.out.println("Brazo ha cambiado la caja");
+			pastas = new ArrayList<Pasta>();
+			setIsFull(false);
+			notifyAll();
+		}
+
 	}
 
 }
